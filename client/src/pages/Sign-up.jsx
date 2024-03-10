@@ -75,7 +75,7 @@ function SignUp() {
             {!loading && <span>Submit</span>}
             </Button>
           </form>
-          <p className='mt-4'>Already have an account ? <span className='text-blue-500 hover:text-blue-900' ><Link to="/login">Log in </Link></span> </p>
+          <p className='mt-4'>Already have an account ? <span className='text-blue-500 hover:text-blue-900' ><Link to="/sign-in">Sign in </Link></span> </p>
           {error && <Alert color='failure' className='font-medium'>{error}</Alert>}
         </div>
       </div>
