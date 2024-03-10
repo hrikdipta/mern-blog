@@ -12,7 +12,6 @@ app.use(cors());
 app.use(express.json());
 
 dotenv.config();
-// console.log(process.env.MONGODBURL)
 mongoose.connect(process.env.MONGODBURL).then(()=>console.log("mongodb connected !!")).catch((err)=>{  throw err})
 
 app.use('/api/user',userRouter)
