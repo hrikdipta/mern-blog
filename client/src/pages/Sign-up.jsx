@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Button, Label, TextInput ,Alert,Spinner} from 'flowbite-react';
 import { Link ,useNavigate} from 'react-router-dom';
+import OAuth from '../components/OAuth';
 
 
 function SignUp() {
@@ -74,6 +75,7 @@ function SignUp() {
             {loading && <Spinner aria-label="Spinner button example" size="sm" />}
             {!loading && <span>Submit</span>}
             </Button>
+            <OAuth/>
           </form>
           <p className='mt-4'>Already have an account ? <span className='text-blue-500 hover:text-blue-900' ><Link to="/sign-in">Sign in </Link></span> </p>
           {error && <Alert color='failure' className='font-medium'>{error}</Alert>}

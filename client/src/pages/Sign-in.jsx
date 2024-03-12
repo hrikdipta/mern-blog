@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import {signInStart,signInSuccess,signInFailure} from '../redux/User/userSlice'
 import { Button, Label, TextInput ,Alert,Spinner} from 'flowbite-react';
 import { Link ,useNavigate} from 'react-router-dom';
+import OAuth from '../components/OAuth';
 
 
 function signIn() {
@@ -67,6 +68,7 @@ function signIn() {
             {loading && <Spinner aria-label="Spinner button example" size="sm" />}
             {!loading && <span>Submit</span>}
             </Button>
+            <OAuth/>
           </form>
           <p className='mt-4'>Don't have an account ? <span className='text-blue-500 hover:text-blue-900' ><Link to="/sign-up">Sign up </Link></span> </p>
           {error && <Alert color='failure' className='font-medium'>{error}</Alert>}
