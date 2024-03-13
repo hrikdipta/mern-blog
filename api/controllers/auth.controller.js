@@ -40,7 +40,7 @@ export const signin=async(req,res,next)=>{
         }
         const token=jwt.sign({id:user._id},process.env.JWT_SECRET);
         const {password:pass,...rest}=user._doc;
-        return res.status(200).cookie('token',token,{httpOnly:true}).json({rest});
+        return res.status(200).cookie('token',token,{httpOnly:true}).json(rest);
     } catch (error) {
         next(error)
     }
@@ -52,7 +52,7 @@ export const googleAuth=async(req,res,next)=>{
         if(user){
             const token =jwt.sign({id:user._id},process.env.JWT_SECRET);
             const {password,...rest}=user._doc;
-            return res.status(200).cookie('token',token,{httpOnly:true}).json({rest});
+            return res.status(200).cookie('token',token,{httpOnly:true}).json(rest);
         }else{
             const randomPassword=Math.random().toString(36).substring(7);
             const hashedPassword=bcrypt.hashSync(randomPassword,10);
@@ -64,7 +64,7 @@ export const googleAuth=async(req,res,next)=>{
             })
             const token =jwt.sign({id:newUser._id},process.env.JWT_SECRET);
             const {password,...rest}=newUser._doc;
-            return res.status(200).cookie('token',token,{httpOnly:true}).json({rest});
+            return res.status(200).cookie('token',token,{httpOnly:true}).json(rest);
         }
     } catch (error) {
         next(error)
