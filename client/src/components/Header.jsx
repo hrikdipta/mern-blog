@@ -4,12 +4,15 @@ import { Button, Navbar, TextInput, Dropdown, Avatar } from 'flowbite-react';
 import {  HiLogout } from 'react-icons/hi';
 import Logo from "./Logo";
 import { FaSearch } from "react-icons/fa";
-import { MdDarkMode } from "react-icons/md";
+import { MdDarkMode,MdLightMode } from "react-icons/md";
 import { useSelector, useDispatch } from 'react-redux'
+import { toggleTheme } from "../redux/theme/themeSlice";
 function Header() {
+  
+  const dispatch=useDispatch();
   const path = useLocation().pathname;
   const { currentUser: user } = useSelector(state => state.user)
-
+  const {theme}=useSelector(state=>state.theme);console.log(theme)
   return (
     <Navbar fluid rounded>
       <div >
@@ -23,9 +26,14 @@ function Header() {
       <div>
         <FaSearch className="h-6 w-6 text-gray-500 md:hidden cursor-pointer" />
       </div>
-      <div className="flex md:order-3 items-center gap-4">
-        <div className="w-10 h-10 rounded-md bg-white hover:bg-slate-200 flex items-center justify-center cursor-pointer">
-          <MdDarkMode className="w-8 h-8 cursor-pointer text-slate-700" />
+      <div className="flex md:order-3 items-center  md:gap-4">
+        <div className="w-10 h-10 rounded-md hover:bg-slate-200 flex items-center justify-center dark:bg-inherit">
+          {
+            theme==='light'?
+            (<MdDarkMode className="w-8 h-8 cursor-pointer text-slate-700" onClick={()=>{dispatch(toggleTheme())}}/>)
+            :(<MdLightMode className="w-8 h-8 cursor-pointer text-slate-700 dark:text-slate-200" onClick={()=>{dispatch(toggleTheme())}}/>)
+          }
+          
         </div>
         {user ? (
           <Dropdown arrowIcon={false} inline label={<Avatar img={user.photoURL} alt="user" rounded />}>
@@ -46,6 +54,7 @@ function Header() {
         <Link to='/'><Navbar.Link as='div' href="#" active={path === '/'}>Home</Navbar.Link></Link>
         <Link to='/about'><Navbar.Link as='div' href="#" active={path === '/about'}>About</Navbar.Link></Link>
         <Link to='/contact'><Navbar.Link as='div' href="#" active={path === '/contact'}>Contact</Navbar.Link></Link>
+
       </Navbar.Collapse>
     </Navbar>
   );
