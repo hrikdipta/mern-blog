@@ -17,7 +17,7 @@ function Dashboard() {
   return (
     <div className='min-h-screen flex flex-col md:flex-row'>
       {/* dashboard left part */}
-      <div className='w-56'>
+      <div className='md:max-w-56 w-full'>
         <DashSideBar/>
       </div>
       {/* dashboard right part */}

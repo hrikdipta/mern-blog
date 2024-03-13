@@ -27,14 +27,14 @@ function Header() {
         <FaSearch className="h-6 w-6 text-gray-500 md:hidden cursor-pointer" />
       </div>
       <div className="flex md:order-3 items-center  md:gap-4">
-        <div className="w-10 h-10 rounded-md hover:bg-slate-200 flex items-center justify-center dark:bg-inherit">
+        <button className="w-10 h-10 rounded-md hover:bg-slate-200 flex items-center justify-center dark:bg-inherit dark:hover:bg-slate-600" onClick={()=>{dispatch(toggleTheme())}} >
           {
             theme==='light'?
-            (<MdDarkMode className="w-8 h-8 cursor-pointer text-slate-700" onClick={()=>{dispatch(toggleTheme())}}/>)
-            :(<MdLightMode className="w-8 h-8 cursor-pointer text-slate-700 dark:text-slate-200" onClick={()=>{dispatch(toggleTheme())}}/>)
+            (<MdDarkMode className="w-8 h-8 cursor-pointer text-slate-700" />)
+            :(<MdLightMode className="w-8 h-8 cursor-pointer text-slate-700 dark:text-slate-200" />)
           }
           
-        </div>
+        </button>
         {user ? (
           <Dropdown arrowIcon={false} inline label={<Avatar img={user.photoURL} alt="user" rounded />}>
             <Dropdown.Header>

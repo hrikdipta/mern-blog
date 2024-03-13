@@ -17,7 +17,7 @@ function DashSideBar() {
         <div>
             <Sidebar className='w-full'>
                 <Sidebar.Items>
-                    <SidebarItemGroup>
+                    <SidebarItemGroup className='w-full md:min-h-screen'>
                         <Link to='/dashboard?tab=profile'>
                             <Sidebar.Item href="#" active={tab==='profile'} as='div' icon={FaUser} label="user" labelColor="dark">
                                 Profile
