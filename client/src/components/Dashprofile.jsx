@@ -6,7 +6,7 @@ import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/
 import { app } from '../firebase';
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
-import {updateStart,updateSuccess,updateFailure,deleteUserStart,deleteUserSuccess,deleteUserFailure} from '../redux/User/userSlice';
+import {updateStart,updateSuccess,updateFailure,deleteUserStart,deleteUserSuccess,deleteUserFailure,signOutSuccess} from '../redux/User/userSlice';
 import { useDispatch } from 'react-redux';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
 function Dashprofile() {
@@ -17,11 +17,12 @@ function Dashprofile() {
     const [ImageUrl, setImageUrl] = useState(null);
     const [imageUploading,setImageUploading]=useState(false);
     const [updateUserSuccess,setUpdateUserSuccess]=useState(null);
-    const[error,setError]=useState(null);
-    const[imageUploadProgress,setImageUploadProgress]=useState(null);
-    const allowedFileTypes = ['image/png', 'image/jpeg', 'image/jpg','image/gif'];
+    const [error,setError]=useState(null);
+    const [imageUploadProgress,setImageUploadProgress]=useState(null);
     const [formdata,setFormdata]=useState({});
     const [showmodal, setShowmodal] = useState(false);
+    const allowedFileTypes = ['image/png', 'image/jpeg', 'image/jpg','image/gif'];
+    
     const handleInputChange=(e)=>{
         setFormdata({...formdata,[e.target.name]:e.target.value});
         console.log(formdata)
@@ -121,6 +122,23 @@ function Dashprofile() {
             dispatch(deleteUserFailure(error.message))
         }
     }
+
+    const handleSignOut=async()=>{
+        try {
+            setError(null);
+            const res=await fetch('/api/user/signout',{
+                method:'POST'
+            })
+            const data=await res.json();
+            if(!res.ok){
+                return setError(data.message);
+            }else{
+                dispatch(signOutSuccess());
+            }
+        } catch (error) {
+            setError(error.message);
+        }
+    }
     return (
         <div className='max-w-lg mx-auto w-full px-4 pt-6'>
             <h1 className='text-center text-3xl mb-4 font-semibold'>Profile</h1>
@@ -166,7 +184,7 @@ function Dashprofile() {
             </form>
             <div className='text-red-500 flex justify-between my-4 font-semibold'>
                 <span onClick={()=>{setShowmodal(true)}} className='cursor-pointer'>Delete Account</span>
-                <span className='cursor-pointer'>Sign Out</span>
+                <span onClick={handleSignOut} className='cursor-pointer'>Sign Out</span>
             </div>
             {error && <Alert color='failure'>{error}</Alert>}
             {globalError && <Alert color='failure'>{globalError}</Alert>}
