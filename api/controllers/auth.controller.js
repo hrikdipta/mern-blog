@@ -38,7 +38,7 @@ export const signin=async(req,res,next)=>{
         if(!isMatch){
             return next(errorHandler(400,'Invalid credentials'));
         }
-        const token=jwt.sign({id:user._id},process.env.JWT_SECRET);
+        const token=jwt.sign({id:user._id,isAdmin:user.isAdmin},process.env.JWT_SECRET);
         const {password:pass,...rest}=user._doc;
         return res.status(200).cookie('token',token,{httpOnly:true}).json(rest);
     } catch (error) {
@@ -50,7 +50,7 @@ export const googleAuth=async(req,res,next)=>{
     try {
         const user = await User.findOne({email:email});
         if(user){
-            const token =jwt.sign({id:user._id},process.env.JWT_SECRET);
+            const token =jwt.sign({id:user._id,isAdmin:user.isAdmin},process.env.JWT_SECRET);
             const {password,...rest}=user._doc;
             return res.status(200).cookie('token',token,{httpOnly:true}).json(rest);
         }else{
@@ -62,7 +62,7 @@ export const googleAuth=async(req,res,next)=>{
                 password:hashedPassword,
                 photoURL
             })
-            const token =jwt.sign({id:newUser._id},process.env.JWT_SECRET);
+            const token =jwt.sign({id:newUser._id,isAdmin:newUser.isAdmin},process.env.JWT_SECRET);
             const {password,...rest}=newUser._doc;
             return res.status(200).cookie('token',token,{httpOnly:true}).json(rest);
         }

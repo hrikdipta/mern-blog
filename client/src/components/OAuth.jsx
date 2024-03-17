@@ -28,7 +28,8 @@ function OAuth() {
         })
       })
       const data=await res.json();
-      if(data.success==false){
+      //console.log(data)
+      if(!res.ok ||data.success==false){
         return dispatch(signInFailure(data.message))
       }
       if(res.ok){
