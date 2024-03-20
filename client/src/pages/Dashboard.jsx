@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import DashSideBar from '../components/DashSideBar';
 import Dashprofile from '../components/Dashprofile';
+import DashPosts from '../components/DashPosts';
 function Dashboard() {
   const location = useLocation();
   const [tab,setTab]=useState('');
@@ -22,6 +23,7 @@ function Dashboard() {
       </div>
       {/* dashboard right part */}
       {tab==='profile'?<Dashprofile/>:null}
+      {tab==='posts'?<DashPosts/>:null}
     </div>
   )
 }
