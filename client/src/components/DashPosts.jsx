@@ -74,7 +74,7 @@ function DashPosts() {
             <Table.Body className="divide-y">
               {
                 posts.map(post => (
-                  <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
+                  <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800" key={post._id}>
                     <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
                       {post.updatedAt.substring(0, 10).split('-').reverse().join('-')}
                     </Table.Cell>
@@ -90,7 +90,7 @@ function DashPosts() {
                     </Table.Cell>
                     <Table.Cell>{post.catagory}</Table.Cell>
                     <Table.Cell>
-                      <Link to={`/update-post${post._id}`} className="font-medium text-cyan-600 hover:underline dark:text-cyan-500">
+                      <Link to={`/update-post/${post._id}`} className="font-medium text-cyan-600 hover:underline dark:text-cyan-500">
                         Edit
                       </Link>
                     </Table.Cell>
