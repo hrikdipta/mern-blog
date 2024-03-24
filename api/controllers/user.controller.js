@@ -35,12 +35,18 @@ export const updateUser=async(req,res,next)=>{
 }
 
 export const deleteUser=async(req,res,next)=>{
-    if(req.user.id!==req.params.userId){
+    if(!req.user.isAdmin && req.user.id!==req.params.userId){
         return next(errorHandler(401,'UnAuthorized'))
     }
     try {
-        await User.findByIdAndDelete(req.params.userId);
-        res.clearCookie('token').status(200).json("User has been deleted");
+        const response=await User.findByIdAndDelete(req.params.userId);
+        if(!response){
+            next(errorHandler(404,"user not found"))
+        }
+        if(req.user.isAdmin){
+            return res.status(200).json("User has been deleted")
+        }
+        return res.clearCookie('token').status(200).json("User has been deleted");
     } catch (error) {
         next(error);
     }

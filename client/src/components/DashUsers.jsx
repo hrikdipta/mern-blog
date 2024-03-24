@@ -11,7 +11,6 @@ function DashUsers() {
   const[showDeleteModal,setShowDeleteModal]=useState(false);
   const[userIdToDelete,setuserIdToDelete]=useState(null);
   const[error,setError]=useState(null)
-  console.log(users)
   useEffect(()=>{
     const fetchUsers=async()=>{
       const res=await fetch(`/api/user/getusers`)
@@ -47,7 +46,19 @@ function DashUsers() {
     }
   }
   const handleDeleteUser=async()=>{
-    
+    setShowDeleteModal(false);
+    if(!userIdToDelete) return;
+    try {
+        const res=await fetch(`/api/user/delete/${userIdToDelete}`,{
+            method:"DELETE"
+        })
+        if(!res.ok){
+            setError("something went wrong")
+        }
+        setusers((prev)=>(prev.filter((user)=>(user._id!==userIdToDelete))))
+    } catch (error) {
+        setError(error.message)
+    }
   }
   return (
     <div className='table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500'>
