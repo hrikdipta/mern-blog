@@ -1,4 +1,5 @@
 import Post from "../models/post.model.js";
+import { errorHandler } from "../utils/error.js";
 
 export const createPost= async(req,res,next)=>{
     if(!req.user.isAdmin){
@@ -52,6 +53,21 @@ export const getposts=async(req,res,next)=>{
             totalPosts,
             lastMonthPosts
         });
+    } catch (error) {
+        next(error);
+    }
+}
+
+export const deletePost=async(req,res,next)=>{
+    if(!req.user.isAdmin || req.user.id!==req.params.userId){
+        return next(errorHandler(401,'You are not allowed to delete post'));
+    }
+    try {
+        const response=await Post.findByIdAndDelete(req.params.postId);
+        if(!response){
+            return next(errorHandler(404,'Post not found'));
+        }
+        return res.status(200).json("Post has been deleted")
     } catch (error) {
         next(error);
     }
