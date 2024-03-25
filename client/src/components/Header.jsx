@@ -33,7 +33,7 @@ function Header() {
 }
   
   return (
-    <Navbar fluid rounded>
+    <Navbar fluid rounded className="border-b-2">
       <div >
         <Logo />
       </div>
@@ -75,6 +75,7 @@ function Header() {
         <Link to='/contact'><Navbar.Link as='div' href="#" active={path === '/contact'}>Contact</Navbar.Link></Link>
 
       </Navbar.Collapse>
+      
     </Navbar>
   );
 }

@@ -5,3 +5,27 @@
 .ql-editor{
     font-size: 1.125rem;
 }
+.post-content p{
+    margin-bottom: 1rem;
+}
+.post-content h2{
+    font-size: 1.4rem;
+    margin: 1.5 0rem;
+    font-weight: 500;
+    font-family: sans-serif;
+}
+.post-content h3{
+    font-size: 1.5rem;
+    margin: 1rem 0;
+    font-weight: 700;
+    font-family: sans-serif;
+}
+.post-content code{
+    background-color: rgba(0, 0, 0, 0.1);
+    color: #232323;
+    padding: 1.6px 4px;
+    border-radius: 6px;
+}
+.post-content a{
+    color: rgb(59, 73, 223);
+}
