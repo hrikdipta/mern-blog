@@ -93,4 +93,16 @@ export const getUsers=async(req,res,next)=>{
     }
     
 }
+export const getUser=async(req,res,next)=>{
+    try {
+        const user=await User.findById(req.params.userId)
+        if(!user){
+            return res.status(404).json("user not found");
+        }
+        const {username,photoURL,...rest}=user._doc;
+        return res.status(200).json({username,photoURL});
+    } catch (error) {
+        next(error)
+    }
+}
 export default test; 

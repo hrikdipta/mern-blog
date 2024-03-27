@@ -1,10 +1,13 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {useSelector} from 'react-redux'
 import { Link } from 'react-router-dom'
 import { Avatar ,Button,Textarea} from "flowbite-react";
+import Comment from '../components/Comment'
 function CommentSection({postId}) {
     const{currentUser} =useSelector((state)=>state.user)
     const[comment,setComment]=useState('');
+    const[commentsFromPost,setCommentsFromPost]=useState([]);
+    const[error,setError]=useState(null);
     const handleSubmit=async(e)=>{
       e.preventDefault();
       if(comment.length>200)
@@ -26,11 +29,30 @@ function CommentSection({postId}) {
         const data= await res.json();
         if(res.ok){
           setComment('');
+          setCommentsFromPost([data,...commentsFromPost])
         }
       } catch (error) {
         console.log(error)
       }
     }
+    useEffect(()=>{
+      const fetchComments=async()=>{
+        try {
+          const res =await fetch(`/api/comment/getpostcomments/${postId}`)
+          const allComments=await res.json();
+          
+          if(!res.ok){
+            return setError("An Error occuared while fetching the comments");
+          }else{
+            setCommentsFromPost(allComments);
+            setError(null);
+          }
+        } catch (error) {
+          setError(error.message);
+        }
+      }
+      fetchComments();
+    },[postId])
   return (
     <div className='max-w-2xl w-full p-3 mx-auto my-5'>
       {
@@ -57,6 +79,23 @@ function CommentSection({postId}) {
             </form>
         )
       }
+      <div>
+        {
+          commentsFromPost.length === 0 ? (<p className='text-gray-500 my-5 text-sm'>No Comments Yet</p>) : (
+            <>
+              <div className='my-5 flex items-center gap-1 text-sm'>
+                <p>Comments </p>
+                <span className='border rounded-md border-gray-400 px-2'>{commentsFromPost.length}</span>
+              </div>
+              {
+                commentsFromPost.map((comment)=>(
+                  <Comment key={comment._id} comment={comment} />
+                ))
+              }
+            </>
+          )
+        }
+      </div>
 
     </div>
   )
