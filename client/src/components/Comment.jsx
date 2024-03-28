@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import moment from 'moment';
 import { Avatar } from "flowbite-react";
-function Comment({comment}) {
+import { FaThumbsUp } from "react-icons/fa";
+import { useSelector } from 'react-redux';
+function Comment({comment,likeComment}) {
   const[user,setUser]=useState(null);
-  // console.log(user)
+  const {currentUser}=useSelector((state)=>state.user)
   useEffect(()=>{
     const fetchUserData=async()=>{
       try {
@@ -14,7 +16,6 @@ function Comment({comment}) {
         }else{
           setUser(data);
         }
-        
       } catch (error) {
         console.log(error.message);
       }
@@ -34,6 +35,18 @@ function Comment({comment}) {
         <p className=' text-gray-500 mb-2'>
           {comment.content}
         </p>
+        <div className=' text-sm flex items-center gap-2 '>
+          <button type='button' className={`text-gray-500 hover:text-blue-500 ${currentUser && comment.likes.includes(currentUser._id) && '!text-blue-500'}`} onClick={()=>{likeComment(comment._id)}}>
+            <FaThumbsUp/>
+          </button>
+          <p className=' text-gray-500'>
+            {
+              comment.numberOfLikes>0 && (comment.numberOfLikes + " " + (comment.numberOfLikes===1 ? 'like' :"likes"))
+            }
+          </p>
+         
+        
+        </div>
       </div>
     </div>
   )

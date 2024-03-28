@@ -5,7 +5,7 @@ import { Footer } from 'flowbite-react'
 import { BsFacebook, BsGithub, BsInstagram, BsTwitter } from 'react-icons/bs';
 function FooterCom() {
   return (
-    <Footer container>
+    <Footer container className=' border-t-2 '>
       <div className="w-full">
         <div className="grid w-full justify-between sm:flex sm:justify-between md:flex md:grid-cols-1">
           <div>

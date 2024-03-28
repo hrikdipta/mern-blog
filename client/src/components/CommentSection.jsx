@@ -6,7 +6,8 @@ import Comment from '../components/Comment'
 function CommentSection({postId}) {
     const{currentUser} =useSelector((state)=>state.user)
     const[comment,setComment]=useState('');
-    const[commentsFromPost,setCommentsFromPost]=useState([]);
+    const[commentsFromPost,setCommentsFromPost]=useState([]);//all comments
+    console.log(commentsFromPost)
     const[error,setError]=useState(null);
     const handleSubmit=async(e)=>{
       e.preventDefault();
@@ -53,6 +54,25 @@ function CommentSection({postId}) {
       }
       fetchComments();
     },[postId])
+
+    const likeComment=async (commentId)=>{
+      try {
+        if(!currentUser){
+          return;
+        }
+        const res=await fetch(`/api/comment/likecomment/${commentId}`,{
+          method:"PUT"
+        })
+        if(res.ok){
+          const data =await res.json();
+          setCommentsFromPost(
+            commentsFromPost.map((comment)=>((comment._id===commentId)?{...comment,likes:data.likes,numberOfLikes:data.numberOfLikes}:comment))
+          )
+        }
+      } catch (error) {
+        console.log(error.message)
+      }
+    }
   return (
     <div className='max-w-2xl w-full p-3 mx-auto my-5'>
       {
@@ -89,7 +109,7 @@ function CommentSection({postId}) {
               </div>
               {
                 commentsFromPost.map((comment)=>(
-                  <Comment key={comment._id} comment={comment} />
+                  <Comment key={comment._id} comment={comment} likeComment={likeComment} />
                 ))
               }
             </>
