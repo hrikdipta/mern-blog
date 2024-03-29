@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import moment from 'moment';
-import { Avatar ,Textarea,Button} from "flowbite-react";
+import { Avatar ,Textarea,Button,Modal} from "flowbite-react";
 import { FaThumbsUp } from "react-icons/fa";
 import { useSelector } from 'react-redux';
-function Comment({comment,likeComment,onEdit}) {
+import { HiOutlineExclamationCircle } from "react-icons/hi";
+function Comment({comment,likeComment,onEdit,onDelete}) {
   const[user,setUser]=useState(null);
   const[isEditing,setIsEditing]=useState(false);
   const[editedContent,setEditedContent]=useState('')
-  console.log(editedContent)
+  const[showModal,setShowModal]=useState(false);
   const {currentUser}=useSelector((state)=>state.user)
   useEffect(()=>{
     const fetchUserData=async()=>{
@@ -47,6 +48,20 @@ function Comment({comment,likeComment,onEdit}) {
       }
     } catch (error) {
       console.log(error.message);
+    }
+  }
+
+  const deleteComment=async()=>{
+    try {
+      const res= await fetch(`/api/comment/deletecomment/${comment._id}`,{
+        method:"DELETE"
+      })
+      if(res.ok){
+        setShowModal(false);
+        onDelete(comment._id)
+      }
+    } catch (error) {
+      console.log(error.message)
     }
   }
   return (
@@ -89,7 +104,32 @@ function Comment({comment,likeComment,onEdit}) {
                     </button>
                   )
                 }
-              
+                {
+                  currentUser && (currentUser.isAdmin || comment.userId===currentUser._id)&&(
+                    <button type='button' className='text-red-400 hover:text-red-600' onClick={()=>{setShowModal(true)}}>
+                      Delete
+                    </button>
+                  )
+                }
+                  <Modal show={showModal} size="md" onClose={() => setShowModal(false)} popup>
+                    <Modal.Header />
+                    <Modal.Body>
+                      <div className="text-center">
+                        <HiOutlineExclamationCircle className="mx-auto mb-4 h-14 w-14 text-gray-400 dark:text-gray-200" />
+                        <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
+                          Are you sure you want to delete this comment?
+                        </h3>
+                        <div className="flex justify-center gap-4">
+                          <Button color="failure" onClick={deleteComment}>
+                            {"Yes, I'm sure"}
+                          </Button>
+                          <Button color="gray" onClick={() => setShowModal(false)}>
+                            No, cancel
+                          </Button>
+                        </div>
+                      </div>
+                    </Modal.Body>
+                  </Modal>
               </div>
             </>
           )

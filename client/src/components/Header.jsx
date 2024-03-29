@@ -13,7 +13,7 @@ function Header() {
   const dispatch=useDispatch();
   const path = useLocation().pathname;
   const { currentUser: user } = useSelector(state => state.user)
-  const {theme}=useSelector(state=>state.theme);console.log(theme)
+  const {theme}=useSelector(state=>state.theme);
 
   const handleSignOut=async()=>{
     try {

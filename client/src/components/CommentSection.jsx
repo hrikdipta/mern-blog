@@ -7,7 +7,7 @@ function CommentSection({postId}) {
     const{currentUser} =useSelector((state)=>state.user)
     const[comment,setComment]=useState('');
     const[commentsFromPost,setCommentsFromPost]=useState([]);//all comments
-    console.log(commentsFromPost)
+    
     const[error,setError]=useState(null);
     const handleSubmit=async(e)=>{
       e.preventDefault();
@@ -79,6 +79,13 @@ function CommentSection({postId}) {
         c._id===commentId?{...c,content:editedContent}:c
       )))
     }
+
+    const handleDelete=(commentId)=>{
+      setCommentsFromPost(commentsFromPost.filter((comment)=>(
+        comment._id!=commentId
+      )))
+      
+    }
   return (
     <div className='max-w-2xl w-full p-3 mx-auto my-5'>
       {
@@ -115,7 +122,7 @@ function CommentSection({postId}) {
               </div>
               {
                 commentsFromPost.map((comment)=>(
-                  <Comment key={comment._id} comment={comment} likeComment={likeComment} onEdit={handleEdit} />
+                  <Comment key={comment._id} comment={comment} likeComment={likeComment} onEdit={handleEdit} onDelete={handleDelete}/>
                 ))
               }
             </>

@@ -7,7 +7,6 @@ function PostPage() {
     const[post,setPost]=useState({})
     const[loading,setLoading]=useState(false);
     const[error,setError]=useState(null);
-    console.log(post)
     
   useEffect(() => {
     const fetchPost = async () => {
