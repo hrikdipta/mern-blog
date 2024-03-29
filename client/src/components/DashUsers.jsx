@@ -37,7 +37,7 @@ function DashUsers() {
         return setError("something went wrong");
       }else{
         setusers([...users,...data.allUsers])
-        if(data.allUsers.length<=9){
+        if(data.allUsers.length<9){
           setShowMore(false);
         }
       }
@@ -60,6 +60,7 @@ function DashUsers() {
         setError(error.message)
     }
   }
+  if(!currentUser.isAdmin) return null;
   return (
     <div className='table-auto overflow-x-scroll md:mx-auto p-3 scrollbar scrollbar-track-slate-100 scrollbar-thumb-slate-300 dark:scrollbar-track-slate-700 dark:scrollbar-thumb-slate-500'>
       {

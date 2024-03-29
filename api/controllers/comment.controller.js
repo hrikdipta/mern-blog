@@ -81,3 +81,26 @@ export const deleteComment=async(req,res,next)=>{
         next(error);
     }
 }
+
+export const getAllComments=async(req,res,next)=>{
+    try {
+        if(!req.user.isAdmin){
+            return res.status(401).json("you are not allowed")
+        }
+        const startIndex=parseInt(req.query.startIndex) || 0;
+        const limit =parseInt(req.query.limit) || 9;
+        const sortDirection=req.query.sort==='asc'?1:-1;
+        const allComments=await Comment.find({}).sort({updatedAt:sortDirection}).limit(limit).skip(startIndex);
+        const totalComments=await Comment.countDocuments();
+        const now = new Date();
+        const oneMonthAgo=new Date(
+            now.getFullYear(),
+            now.getMonth()-1,
+            now.getDate()
+        )
+        const lastMonthComments=await Comment.countDocuments({updatedAt:{$gte:oneMonthAgo}})
+        return res.status(200).json({allComments,totalComments,lastMonthComments})
+    } catch (error) {
+        next(error)
+    }
+}
