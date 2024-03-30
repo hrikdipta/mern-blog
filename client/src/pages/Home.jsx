@@ -20,7 +20,7 @@ function Home() {
         <p className=' max-w-xl text-wrap text-sm text-slate-500 dark:text-gray-400'>Here you'll find a varaity of artticles and tutorials on topics such as web devolopment, software engineering and programming languages</p>
         <Link to='/search' className=' text-sm text-teal-500 font-bold hover:underline'>See all posts</Link>
       </div>
-      <div className='flex flex-col max-w-6xl mx-auto p-3 gap-6 mt-7'>
+      <div className='flex flex-col mx-auto p-3 gap-6 mt-7'>
         {
           posts.length>0 &&(
             <div className='flex flex-col gap-6 items-center'>

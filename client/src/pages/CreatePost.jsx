@@ -1,23 +1,24 @@
-import React, { useState } from 'react'
+import React, { useState,useRef } from 'react'
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import {TextInput,Select,FileInput,Button,Alert} from 'flowbite-react';
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import {app} from '../firebase'
 import { useNavigate } from 'react-router-dom';
+import { Editor } from '@tinymce/tinymce-react';
+import { useSelector } from 'react-redux';
 function CreatePost() {
     const storage = getStorage(app);
+    const {theme}=useSelector((state)=>state.theme);
+    console.log(theme)
+    const editorRef = useRef(null);
     const navigate=useNavigate();
-    const [value,setValue]=useState('');
     const [formData,setFormData]=useState({});
     const [image,setImage]=useState(null);
     const [imageUploadError,setImageUploadError]=useState(null);
     const [error,setError]=useState(null);
     const [imageUploading,setImageUploading]=useState(false);
     const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
-    const handleChange=(e)=>{
-        setFormData({...formData,[e.target.name]:e.target.value})
-    }
     const handleFileChange=(e)=>{
         const file=e.target.files[0];
         if(!file){
@@ -61,20 +62,16 @@ function CreatePost() {
         if(!formData.title || formData.title.trim().length===0){
             return setError('Title is required');
         }
-        if(!value||value.trim().length===0){
+        if(!formData.content||formData.content.trim().length===0){
             return setError('Content is required');
         }
         try {
-            let data={
-                ...formData,
-                content:value
-            }
             const res=await fetch('/api/post/create',{
                 method:'POST',
                 headers:{
                     'Content-Type':'application/json'
                 },
-                body:JSON.stringify(data)
+                body:JSON.stringify(formData)
             })
             const result = await res.json();
             if(!res.ok){
@@ -82,19 +79,18 @@ function CreatePost() {
             }
             setError(null);
             navigate(`/post/${result.slug}`);
-
         } catch (error) {
             setError('An error occured while creating the post')
         }
     }
+    
     return (
-        <div className='p-3 max-w-3xl mx-auto min-h-screen'>
-            <h1 className='text-center text-2xl md:text-3xl my-4 font-semibold'>Create a Post</h1>
+        <div className='p-3 max-w-4xl mx-auto min-h-screen'>
+            <h1 className='text-center text-2xl md:text-3xl my-4 font-semibold font-mono'>Create a Post</h1>
             <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
                 <div className='flex flex-col md:flex-row gap-4 justify-between' >
-                    <TextInput id="title" name='title' type="text" placeholder="Title" required className='flex-auto' onChange={handleChange} />
-                    
-                    <Select onChange={handleChange} name='catagory'>
+                    <TextInput id="title" name='title' type="text" placeholder="Title" required className='flex-auto' onChange={(e)=>{setFormData({...formData,[e.target.name]:e.target.value})}} />
+                    <Select onChange={(e)=>{setFormData({...formData,[e.target.name]:e.target.value})}} name='catagory'>
                         <option value='uncatagorized'>Select a catagory</option>
                         <option value='javascript'>Javascript</option>
                         <option value='python'>Python</option>
@@ -114,8 +110,30 @@ function CreatePost() {
                 {
                     formData.image && <img src={formData.image} alt="post Image" className='w-full h-72 object-cover rounded-md' />
                 }
-                <ReactQuill theme="snow" value={value} onChange={setValue}  className='h-72 mb-5' required/>
-                <Button type='submit' outline gradientDuoTone="purpleToBlue" className='mt-5' disabled={imageUploading}  >Publish</Button>
+                <Editor
+                    apiKey={import.meta.env.VITE_TINYMCE_API_KEY}
+                    onInit={(evt, editor) => editorRef.current = editor}
+                    initialValue=""
+                    init={{
+                        height: 500,
+                        menubar: false,
+                        plugins: [
+                            'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+                            'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+                            'insertdatetime', 'media', 'table', 'code', 'help', 'wordcount' ,'codesample'
+                        ],
+                        toolbar: 'undo redo | blocks | ' +
+                            'bold italic forecolor | alignleft aligncenter ' +
+                            'alignright alignjustify | bullist numlist outdent indent codesample | ' +
+                            'removeformat | help',
+                        content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px; }',
+                        
+                    }}
+                    
+                    onEditorChange={()=>{setFormData({...formData,content:(editorRef.current && editorRef.current.getContent())})}}
+                    
+                />
+                <Button type='submit' outline gradientDuoTone="purpleToBlue" className='my-7' disabled={imageUploading}  >Publish</Button>
             </form>
             {
                 error && <Alert color='failure' className='mt-5'>{error}</Alert>

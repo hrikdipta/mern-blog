@@ -2,9 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-.ql-editor{
-    font-size: 1.125rem;
-}
 .post-content p{
     margin-bottom: 1rem;
 }
