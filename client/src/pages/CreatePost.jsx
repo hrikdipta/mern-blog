@@ -1,16 +1,11 @@
 import React, { useState,useRef } from 'react'
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
 import {TextInput,Select,FileInput,Button,Alert} from 'flowbite-react';
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import {app} from '../firebase'
 import { useNavigate } from 'react-router-dom';
 import { Editor } from '@tinymce/tinymce-react';
-import { useSelector } from 'react-redux';
 function CreatePost() {
     const storage = getStorage(app);
-    const {theme}=useSelector((state)=>state.theme);
-    console.log(theme)
     const editorRef = useRef(null);
     const navigate=useNavigate();
     const [formData,setFormData]=useState({});

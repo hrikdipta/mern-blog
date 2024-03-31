@@ -55,7 +55,7 @@ function signIn() {
               <div className="mb-2 block">
                 <Label htmlFor="email" value="Your email" />
               </div>
-              <TextInput id="email" name='email' type="email" placeholder="name@flowbite.com" required onChange={handleOnChange} />
+              <TextInput id="email" name='email' type="email" placeholder="name@example.com" required onChange={handleOnChange} />
             </div>
             <div>
               <div className="mb-2 block">

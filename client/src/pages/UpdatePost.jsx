@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react'
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+import React, { useEffect, useState,useRef } from 'react'
+import { Editor } from '@tinymce/tinymce-react';
 import {TextInput,Select,FileInput,Button,Alert} from 'flowbite-react';
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import {app} from '../firebase'
@@ -8,6 +7,7 @@ import { useNavigate,useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 function UpdatePost() {
     const storage = getStorage(app);
+    const editorRef = useRef(null);
     const navigate=useNavigate();
     const [formData,setFormData]=useState({});
     const [image,setImage]=useState(null);
@@ -17,6 +17,7 @@ function UpdatePost() {
     const allowedTypes = ['image/png', 'image/jpeg', 'image/jpg'];
     const {postId}=useParams();
     const {currentUser} =useSelector((state)=>state.user)
+    console.log(formData)
     useEffect(()=>{
         try {
             const fetchPost=async()=>{
@@ -27,7 +28,7 @@ function UpdatePost() {
                     
                 }
                 setFormData(data.posts[0]);
-                console.log(formData)
+                
             }
             fetchPost();
         } catch (error) {
@@ -35,9 +36,7 @@ function UpdatePost() {
         }
     },[postId])
 
-    const handleChange=(e)=>{
-        setFormData({...formData,[e.target.name]:e.target.value})
-    }
+    
     const handleFileChange=(e)=>{
         const file=e.target.files[0];
         if(!file){
@@ -100,7 +99,7 @@ function UpdatePost() {
             navigate(`/post/${result.slug}`);
 
         } catch (error) {
-            setError('An error occured while creating the post')
+            setError('An error occured while updating the post')
         }
     }
     return (
@@ -108,9 +107,9 @@ function UpdatePost() {
             <h1 className='text-center text-2xl md:text-3xl my-4 font-semibold'>Update Post</h1>
             <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
                 <div className='flex flex-col md:flex-row gap-4 justify-between' >
-                    <TextInput id="title" name='title' type="text" placeholder="Title" required className='flex-auto' onChange={handleChange} defaultValue={formData.title} />
+                    <TextInput id="title" name='title' type="text" placeholder="Title" required className='flex-auto' value={formData.title} onChange={(e)=>{setFormData({...formData,[e.target.name]:e.target.value})}} />
                     
-                    <Select onChange={handleChange} name='catagory' value={formData.catagory}>
+                    <Select  name='catagory' value={formData.catagory} onChange={(e)=>{setFormData({...formData,[e.target.name]:e.target.value})}}>
                         <option value='uncatagorized'>Select a catagory</option>
                         <option value='javascript'>Javascript</option>
                         <option value='python'>Python</option>
@@ -130,7 +129,29 @@ function UpdatePost() {
                 {
                     formData.image && <img src={formData.image} alt="post Image" className='w-full h-72 object-cover rounded-md' />
                 }
-                <ReactQuill theme="snow" value={formData.content} onChange={(value)=>{setFormData({...formData,content:value})}}  className='h-72 mb-5' required/>
+                <Editor
+                    apiKey={import.meta.env.VITE_TINYMCE_API_KEY}
+                    onInit={(evt, editor) => editorRef.current = editor}
+                    initialValue={formData.content}
+                    init={{
+                        height: 500,
+                        menubar: false,
+                        plugins: [
+                            'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+                            'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+                            'insertdatetime', 'media', 'table', 'code', 'help', 'wordcount' ,'codesample'
+                        ],
+                        toolbar: 'undo redo | blocks | ' +
+                            'bold italic forecolor | alignleft aligncenter ' +
+                            'alignright alignjustify | bullist numlist outdent indent codesample | ' +
+                            'removeformat | help',
+                        content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px; }',
+                        
+                    }}
+                    
+                    onEditorChange={()=>{setFormData({...formData,content:(editorRef.current && editorRef.current.getContent())})}}
+                    
+                />
                 <Button type='submit' outline gradientDuoTone="purpleToBlue" className='mt-5' disabled={imageUploading}>Update</Button>
             </form>
             {

@@ -1,14 +1,24 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+.post-content{
+    font-size: 1.1rem;
+    line-height: 1.6;
+    font-weight: 400;
+}
 .post-content p{
-    margin-bottom: 1rem;
+    margin: 1rem 0;
 }
 .post-content h2{
-    font-size: 1.4rem;
-    margin: 1.5 0rem;
-    font-weight: 500;
+    font-size: 1.6rem;
+    margin: 1.5rem 0;
+    font-weight: 700;
+    font-family: sans-serif;
+}
+.post-content h1{
+    font-size: 1.8rem;
+    margin: 1.5rem 0;
+    font-weight: 900;
     font-family: sans-serif;
 }
 .post-content h3{
@@ -25,4 +35,27 @@
 }
 .post-content a{
     color: rgb(59, 73, 223);
+    font-weight: 500;
+}
+.post-content a:hover{
+    color: rgb(34, 50, 229);
+    font-weight: 500;
+    text-decoration: underline;
+}
+.post-content pre > code{
+    overflow-x: scroll;
+    scrollbar-width: thin;
+}
+.post-content pre code{
+    display: block;
+    padding: 1rem; 
+    /* overflow-x: scroll; */
+}
+.dark .post-content code{
+    background-color: rgba(255, 255, 255, 0.1);
+    color: #fff;
+   
+}
+.post-content strong{
+    font-weight: 700;
 }

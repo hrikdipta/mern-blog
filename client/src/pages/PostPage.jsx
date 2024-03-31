@@ -48,7 +48,7 @@ function PostPage() {
   return (
     <div>
       <main className='p-3 flex flex-col max-w-6xl mx-auto min-h-screen'>
-        <h1 className='text-3xl md:text-4xl mt-10 p-3 text-center font-serif max-w-2xl mx-auto'>{post && post.title}</h1>
+        <h1 className='text-3xl md:text-5xl mt-10 p-3 text-center font-bold font-serif max-w-3xl mx-auto text-black dark:text-gray-300'>{post && post.title}</h1>
         <Link to={`/search?catagory=${post?.catagory}`} className='self-center'>
           <Button color="gray" pill className='mt-6 ' size='xs' >
             {post?.catagory}
@@ -59,11 +59,12 @@ function PostPage() {
           <span>{new Date(post.createdAt).toLocaleDateString()}</span>
           <span>{post.content && (post.content.length/1000).toFixed(0)} mins read</span>
         </div>
-        <div className='max-w-3xl p-3 mx-auto w-full post-content' dangerouslySetInnerHTML={{__html:post.content}}>
+        <div className='max-w-3xl p-3 mx-auto w-full post-content text-black dark:text-gray-300 ' dangerouslySetInnerHTML={{__html:post.content}}>
           
         </div>
         <CommentSection postId={post._id}/>
-        <div className='flex flex-col my-4 p-4 items-center justify-center'>
+      </main>
+        <div className='flex flex-col my-6 p-4 items-center justify-center'>
           <h1 className=' self-center text-xl'>Recent articles</h1>
           <div className='flex flex-wrap gap-6 my-5 justify-center'>
             {
@@ -73,7 +74,6 @@ function PostPage() {
             }
           </div>
         </div>
-      </main>
     </div>
   )
 }
