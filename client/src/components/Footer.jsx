@@ -38,7 +38,7 @@ function FooterCom() {
         </div>
         <Footer.Divider />
         <div className="w-full sm:flex sm:items-center sm:justify-between">
-          <Footer.Copyright by="Hrikdipta Kundu" year={2024} />
+          <Footer.Copyright className=' font-samarkan' by="Hrikdipta Kundu" year={2024} />
           <div className="mt-4 flex space-x-6 sm:mt-0 sm:justify-center">
             <Footer.Icon href="https://www.facebook.com/profile.php?id=100072202299973" target='_balnk' icon={BsFacebook} />
             <Footer.Icon href="https://www.instagram.com/hrikdiptakundu/" target='_balnk' icon={BsInstagram} />

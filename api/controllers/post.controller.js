@@ -30,10 +30,10 @@ export const getposts=async(req,res,next)=>{
             ...(req.query.catagory && {catagory : req.query.catagory}),
             ...(req.query.slug && {slug : req.query.slug}),
             ...(req.query.postId && {_id : req.query.postId}),
-            ...(req.query.searchTearm && {
+            ...(req.query.searchTerm && {
                 $or:[
-                    {title:{$regex:req.query.searchTearm,$options:'i'}},
-                    {content:{$regex:req.query.searchTearm,$options:'i'}}
+                    { title: { $regex: req.query.searchTerm, $options: 'i' } },
+                    { content: { $regex: req.query.searchTerm, $options: 'i' } },
                 ]
             })
         }).sort({updatedAt:sortDirection}).skip(startIndex).limit(limit);
