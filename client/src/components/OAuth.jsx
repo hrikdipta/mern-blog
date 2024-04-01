@@ -2,7 +2,7 @@ import { Button } from 'flowbite-react'
 import React from 'react'
 import { AiFillGoogleCircle } from "react-icons/ai";
 import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { useDispatch ,} from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { signInSuccess, signInFailure, signInStart } from '../redux/User/userSlice'
 import { app } from '../firebase'
 import { useNavigate } from 'react-router-dom';
@@ -47,7 +47,6 @@ return (
     <Button type='button' outline gradientDuoTone="pinkToOrange" className='w-full flex gap-8' onClick={handleGoogleClick}>
       <AiFillGoogleCircle className='w-6 h-6 mr-2' />
       <span>Continue with Google</span>
-
     </Button>
   </div>
 )

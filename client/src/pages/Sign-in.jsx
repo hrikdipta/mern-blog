@@ -11,8 +11,8 @@ function signIn() {
   const navigate=useNavigate();
 
   const[formData,setFormData]=useState({});
-  const {loading,error}=useSelector((state)=>state.user)
-
+  const {loading}=useSelector((state)=>state.user)
+  const[error,setError]=useState(null)
   const handleOnChange=(e)=>{
     setFormData({...formData,[e.target.name]:e.target.value.trim()})
   }
@@ -31,15 +31,17 @@ function signIn() {
         body:JSON.stringify(formData)
       })
       const data =await res.json();
-      if(data.success==false){
+      if(!res.ok){
         dispatch(signInFailure(data.message))
+        setError('An error occured, please try again later')
       }
       if(res.ok){
         dispatch(signInSuccess(data))
         navigate('/')
       }
     } catch (error) {
-      dispatch(signInFailure(error.message))
+      dispatch(signInFailure(error.message));
+      setError('An error occured, please try again later');
     }
   }
   return (
