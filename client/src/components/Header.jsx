@@ -17,7 +17,6 @@ function Header() {
   const {theme}=useSelector(state=>state.theme);
   const[searchTerm,setSearchTerm]=useState('');
   const[showModal,setShowModal]=useState(false);
-  console.log(searchTerm)
   useEffect(()=>{
     const urlParams= new URLSearchParams(location.search)
     const searchTermFromURL=urlParams.get('searchTerm');
@@ -87,7 +86,7 @@ function Header() {
               <Dropdown.Item onClick={handleSignOut}>Sign out</Dropdown.Item>
             </Dropdown>
             ) : (
-            <Link to='/sign-in'>
+            <Link to='/sign-in' className="md:inline hidden">
               <Button gradientDuoTone='purpleToBlue' outline>
                 Sign In
               </Button>
@@ -100,7 +99,15 @@ function Header() {
           <Link to='/'><Navbar.Link as='div' href="#" active={path === '/'}>Home</Navbar.Link></Link>
           <Link to='/about'><Navbar.Link as='div' href="#" active={path === '/about'}>About</Navbar.Link></Link>
           <Link to='/contact'><Navbar.Link as='div' href="#" active={path === '/contact'}>Contact</Navbar.Link></Link>
-
+          {
+            !user &&(
+              <Link to='/sign-in' className="inline md:hidden">
+                <Button gradientDuoTone='purpleToBlue' outline>
+                  Sign In
+                </Button>
+              </Link>
+            )
+          }
         </Navbar.Collapse>
       </Navbar>
       <Modal dismissible show={showModal} onClose={() => setShowModal(false)} className="px-1 flex items-center">
