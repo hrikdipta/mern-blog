@@ -2,7 +2,7 @@ import React from 'react'
 import {Label,TextInput,Textarea,Button} from 'flowbite-react'
 function Contact() {
   return (
-    <div className='max-w-7xl mx-auto p-4 mt-16 min-h-screen flex justify-evenly'>
+    <div className='max-w-7xl mx-auto p-4  md:mt-16 min-h-screen flex justify-evenly flex-col md:flex-row items-center md:items-start'>
       <div className='flex flex-col gap-10 mt-8'>
         <h2 className='text-4xl font-bold'>Contact Us</h2>
         <p className='text-md font-semibold'>Need to get in touch with us? fill out the form with your inquiry</p>

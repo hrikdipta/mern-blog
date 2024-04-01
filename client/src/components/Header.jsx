@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useLocation ,useNavigate} from "react-router-dom";
-import { Button, Navbar, TextInput, Dropdown, Avatar } from 'flowbite-react';
+import { Button, Navbar, TextInput, Dropdown, Avatar,Modal } from 'flowbite-react';
 import {  HiLogout } from 'react-icons/hi';
 import Logo from "./Logo";
 import { FaSearch } from "react-icons/fa";
@@ -16,6 +16,7 @@ function Header() {
   const { currentUser: user } = useSelector(state => state.user)
   const {theme}=useSelector(state=>state.theme);
   const[searchTerm,setSearchTerm]=useState('');
+  const[showModal,setShowModal]=useState(false);
   console.log(searchTerm)
   useEffect(()=>{
     const urlParams= new URLSearchParams(location.search)
@@ -43,6 +44,7 @@ function Header() {
  }
  const handleSubmit=(e)=>{
   e.preventDefault();
+  setShowModal(false);
   const urlParams=new URLSearchParams(location.search);
   urlParams.set('searchTerm',searchTerm);
   const searchQuery=urlParams.toString();
@@ -57,7 +59,7 @@ function Header() {
         <TextInput type="text" className="hidden md:inline" rightIcon={FaSearch} placeholder="Search..." required value={searchTerm} onChange={(e)=>{setSearchTerm(e.target.value)}}/>
 
         </form>
-        <Button color="light" pill className="md:hidden">
+        <Button color="light" pill className="md:hidden" onClick={()=>{setShowModal(true)}}>
           <FaSearch className="text-lg text-gray-700"/>
         </Button>
         <div className="flex items-center gap-3 md:order-2">
@@ -101,6 +103,14 @@ function Header() {
 
         </Navbar.Collapse>
       </Navbar>
+      <Modal dismissible show={showModal} onClose={() => setShowModal(false)} className="px-1 flex items-center">
+        <Modal.Header  className="flex items-center bg-transparent">
+        <div className="flex gap-2">
+          <TextInput type="text" className="w-full flex-grow"  placeholder="Search..." required value={searchTerm} onChange={(e)=>{setSearchTerm(e.target.value)}}/>
+          <Button color="light" className="" onClick={handleSubmit}><FaSearch className=""/></Button>
+        </div>
+        </Modal.Header>
+      </Modal>
     </div>
   );
 }
