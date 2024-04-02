@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Button, Label, TextInput ,Alert,Spinner} from 'flowbite-react';
 import { Link ,useNavigate} from 'react-router-dom';
 import OAuth from '../components/OAuth';
-
+import signin from '../assets/images/signin.png';
 
 function SignUp() {
   const [formData,setFormData]=useState({});
@@ -47,9 +47,8 @@ function SignUp() {
     <div className='max-w-screen-xl mt-20 min-h-screen mx-auto'>
       <div className='flex max-w-5xl px-4 items-center justify-around mx-auto'>
         <div className='w-1/2 mx-6 hidden md:block'>
-          <img className="w-full object-cover" src="https://img.freepik.com/free-vector/tablet-login-concept-illustration_114360-7963.jpg" alt="login"  />
+          <img className="w-full object-cover" src={signin} alt="login"  />
         </div>
-        
         <div className='md:w-1/2 w-full max-w-sm'>
           <form className="flex  flex-col gap-4 " onSubmit={handleSubmit}>
             <div>
