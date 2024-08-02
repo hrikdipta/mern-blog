@@ -5,6 +5,7 @@ import Dashprofile from '../components/Dashprofile';
 import DashPosts from '../components/DashPosts';
 import DashUsers from '../components/DashUsers';
 import DashComments from '../components/DashComments'
+import DashboardComponent from '../components/Dashboard';
 function Dashboard() {
   const location = useLocation();
   const [tab,setTab]=useState('');
@@ -28,6 +29,7 @@ function Dashboard() {
       {tab==='posts'?<DashPosts/>:null}
       {tab==='users'?<DashUsers/>:null}
       {tab==='comments'?<DashComments/>:null}
+      {tab==='dashboard'?<DashboardComponent/>:null}
     </div>
   )
 }

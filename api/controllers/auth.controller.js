@@ -1,30 +1,57 @@
 import User from "../models/user.model.js"
+import Otp from "../models/otp.model.js";
 import bcrypt from "bcryptjs";
 import {errorHandler} from '../utils/error.js'
 import jwt from 'jsonwebtoken';
-
-export const signup=async(req,res,next)=>{
-    const {username,email,password}=req.body;
-    console.log(req.body)
-    if(!username ||!email||!password ||email===""||password===""||username===""){
-        return next(errorHandler(400,'All fields are required'));
+import otpGenerator from "otp-generator";
+import {sendMail } from '../utils/mailSender.js'
+export const generateOtp=async(req,res,next)=>{
+    const {email}=req.body;
+    if(!email || email===""){
+        return next(errorHandler(400,'Email is required'));
     }
-
-    const hashedPassword=bcrypt.hashSync(password,10);
-    try {
-        const user= await User.create({
-        username,
-        email,
-        password:hashedPassword
-        }) 
-        return res.status(201).json({'message':'User created successfully'});
-    } catch (error) {
-        //res.status(500).json({message:error.message});
-        next(error)
-        
+    const isUserExist = await User.findOne({email:email});
+    if(isUserExist)
+        return next(errorHandler(400,'User Already exsist'));
+    const otp=otpGenerator.generate(6,{upperCaseAlphabets: false, specialChars: false,lowerCaseAlphabets:false });
+    // send an email
+    const newMail= await sendMail(email,"Verification Email",`<h2>Please confirm your OTP</h2>
+       <p>Here is your OTP code: ${otp}</p>`);
+    if(!newMail)
+        return next(errorHandler(500,"Internal server error"));
+    const savedOtp = await Otp.findOneAndUpdate({email},{otp})
+    if(!savedOtp){
+        await Otp.create({
+            email,
+            otp
+        })
     }
+    return res.status(200).json('otp sent successfully');
 }
 
+export const signup = async(req,res,next)=>{
+    const {username,email,password,otp} = req.body;
+    if(!username ||!email||!password ||!otp ||email===""||password===""||username===""){
+        return next(errorHandler(400,'All fields are required'));
+    }
+    const savedOtp= await Otp.findOne({email:email});
+    if(!savedOtp || savedOtp?.otp !=otp)
+        return next(errorHandler(400,"otp doesn't match"));
+    try {
+        const hashedPassword=bcrypt.hashSync(password,10);
+        const newUser=await User.create({
+            username,
+            email,
+            password : hashedPassword
+        });
+        await Otp.deleteMany({email:email});
+        const token =jwt.sign({id:newUser._id,isAdmin:newUser.isAdmin},process.env.JWT_SECRET);
+        const {password:pass,...rest}=newUser._doc;
+        return res.status(201).cookie('token',token,{httpOnly:true}).json(rest);
+    } catch (error) {
+        next(error);
+    }
+}
 export const signin=async(req,res,next)=>{
     const{email,password}=req.body;
     if(!email||!password||email===""||password===""){

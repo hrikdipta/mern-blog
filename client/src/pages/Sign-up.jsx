@@ -3,13 +3,13 @@ import { Button, Label, TextInput ,Alert,Spinner} from 'flowbite-react';
 import { Link ,useNavigate} from 'react-router-dom';
 import OAuth from '../components/OAuth';
 import signin from '../assets/images/signin.png';
-
+import OtpModal from '../components/OtpModal'
 function SignUp() {
   const [formData,setFormData]=useState({});
   const[error,setError]=useState(null);
   const[loading,setLoading]=useState(false);
   const navigate=useNavigate();
-
+  const[otpModal,setOtpModal]=useState(false);
   const handleOnChange=(e)=>{
     setFormData({...formData,[e.target.name]:e.target.value.trim()})
   }
@@ -21,7 +21,8 @@ function SignUp() {
     try {
       setLoading(true);
       setError(null);
-      const res=await fetch('/api/auth/signup',{
+      
+      const res=await fetch('/api/auth/generateotp',{
         method:'POST',
         headers:{
           "Content-Type":'application/json'
@@ -29,13 +30,14 @@ function SignUp() {
         body:JSON.stringify(formData)
       })
       const data=await res.json();
-
-      if(data.success==false){
-        setError(data.message)
-      } 
+      
       setLoading(false);
-      if(data.success!==false){
-        navigate('/sign-in')
+      if(!res.ok){
+        setError(data.message);
+        return;
+      } 
+      else{
+        setOtpModal(true);
       }
     } catch (error) {
       setError(error.message);
@@ -72,7 +74,7 @@ function SignUp() {
 
             <Button type="submit" disabled={loading===true}>
             {loading && <Spinner aria-label="Spinner button example" size="sm" />}
-            {!loading && <span>Submit</span>}
+            {!loading && <span>Get Otp</span>}
             </Button>
             <OAuth/>
           </form>
@@ -80,7 +82,7 @@ function SignUp() {
           {error && <Alert color='failure' className='font-medium'>{error}</Alert>}
         </div>
       </div>
-
+      <OtpModal showModal={otpModal} setOpenModal={setOtpModal} formData={formData}/>
     </div>
 
   )
