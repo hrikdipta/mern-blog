@@ -98,3 +98,16 @@ export const googleAuth=async(req,res,next)=>{
         next(error)
     }
 }
+
+export const verifyUser= async(req,res,next)=>{
+    const token = req.cookies.token;
+    if(!token){
+        return next(errorHandler(401,'please login first'));
+    }
+    jwt.verify(token,process.env.JWT_SECRET,(err,user)=>{
+        if(err){
+            return next(errorHandler(401,'UnAuthorized'));
+        }
+        return res.status(200).json({"message":"user verified successfully"});
+    })
+}

@@ -15,6 +15,7 @@ import UpdatePost from './pages/UpdatePost'
 import PostPage from './pages/PostPage'
 import ScrollToTop from './components/ScrollToTop'
 import Search from './pages/Search'
+import VerifyUser from './components/VerifyUser'
 function App() {
   return (
     <>
@@ -22,6 +23,7 @@ function App() {
 
       <BrowserRouter>
         <ScrollToTop/>
+        <VerifyUser/>
         <Header />
         <Routes>
           <Route path="/" element={<Home />} />
