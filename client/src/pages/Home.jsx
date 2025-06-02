@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from 'react'
 import {Link} from 'react-router-dom'
 import PostCard from '../components/PostCard'
+import { useLocation } from 'react-router-dom';
+import { ToastContainer,toast ,Bounce} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { showToast } from '../utilis/showToast';
 function Home() {
   const[posts,setPosts]=useState([]);
+  const location = useLocation();
   useEffect(()=>{
     const fetchPosts=async()=>{
       const res=await fetch('/api/post/getposts');
@@ -11,7 +16,30 @@ function Home() {
         setPosts(data.posts);
       }
     }
+    const checkLoginRedirect=()=>{
+      const query=new URLSearchParams(location.search);
+      const login= query.get('login');
+      if(login==="true"){
+        showToast('success','Account Created Successfully');
+      }
+      else if(login==="false"){
+        toast.error('Login failed', {
+          position: "top-center",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+      });
+      }
+    }
     fetchPosts();
+    checkLoginRedirect();
+
+    
   },[])
   return (
     <div className=' min-h-screen'>
@@ -38,6 +66,7 @@ function Home() {
         }
 
       </div>
+      <ToastContainer/>
     </div>
   )
 }

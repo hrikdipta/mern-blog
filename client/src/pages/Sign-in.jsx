@@ -5,7 +5,8 @@ import { Button, Label, TextInput ,Alert,Spinner} from 'flowbite-react';
 import { Link ,useNavigate} from 'react-router-dom';
 import OAuth from '../components/OAuth';
 import signin from '../assets/images/signin.png';
-
+import { ToastContainer, toast,Bounce } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 function signIn() {
   const dispatch=useDispatch();
   const navigate=useNavigate();
@@ -37,7 +38,18 @@ function signIn() {
       }
       if(res.ok){
         dispatch(signInSuccess(data))
-        navigate('/')
+        toast.success('🦄 Wow so easy!', {
+          position: "top-center",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+          });
+        //navigate('/')
       }
     } catch (error) {
       dispatch(signInFailure(error.message));
@@ -76,6 +88,7 @@ function signIn() {
           {error && <Alert color='failure' className='font-medium'>{error}</Alert>}
         </div>
       </div>
+      <ToastContainer/>
     </div>
   )
 }

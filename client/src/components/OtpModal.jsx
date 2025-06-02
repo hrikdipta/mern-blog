@@ -36,15 +36,14 @@ const OtpModal = ({ showModal, setOpenModal, formData }) => {
                 return;
             } else {
                 dispatch(signInSuccess(data));
-                navigate('/');
-                alert("Account Created Successfully");
+                navigate('/?login=true');
             }
         } catch (error) {
             setError(error.message)
         }
     }
     return (
-        <>
+        <div>
             <Modal show={showModal} size="md" onClose={() => setOpenModal(false)} popup>
                 <Modal.Header />
                 <Modal.Body>
@@ -62,7 +61,7 @@ const OtpModal = ({ showModal, setOpenModal, formData }) => {
                     }
                 </Modal.Body>
             </Modal>
-        </>
+        </div>
     )
 }
 
